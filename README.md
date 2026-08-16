@@ -121,7 +121,7 @@ qwen3-coder:30b
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/wagrude/codeai.git>
 ```
 
 Move into the project:
