@@ -1,8 +1,29 @@
+````markdown
 # CodeAI
 
-CodeAI is a local command-line coding assistant that uses a locally hosted Large Language Model (LLM) to analyze source code. The project is designed to progressively evolve from a simple file-based code reviewer into a project-aware coding agent capable of inspecting source files, analyzing compiler errors, using development tools, and assisting with code modifications.
+CodeAI is a local command-line coding assistant that analyzes source code using a locally hosted Large Language Model (LLM).
 
-The first version focuses on a simple and well-defined pipeline:
+The current version accepts a source-code file from the command line, reads its contents, builds an analysis prompt, sends the prompt to a local Qwen3-Coder 30B model through Ollama, and displays the generated analysis directly in the terminal.
+
+The project is being developed incrementally, starting with basic code analysis and progressing toward a project-aware local coding agent.
+
+---
+
+## Current Status
+
+**Version: V1 — Basic Code Analysis**
+
+V1 is complete and currently supports:
+
+- Command-line file input
+- File existence validation
+- Source-code reading
+- Prompt generation
+- Local LLM communication through Ollama
+- Code analysis and review
+- Terminal output
+
+### Current Flow
 
 ```text
 Source File
@@ -11,194 +32,278 @@ Source File
 CodeAI CLI
     |
     v
+File Validation
+    |
+    v
 Read Source Code
     |
     v
-Build Prompt
+Build Analysis Prompt
     |
     v
-Local LLM
+Ollama
+    |
+    v
+Qwen3-Coder 30B
     |
     v
 Receive Response
     |
     v
-Display Result
-```
-
-The application is designed to work locally so that source code does not need to be sent to an external cloud AI service.
+Display Analysis
+````
 
 ---
 
-## Project Status
+# Features
 
-Current version: **V1 - Basic Code Analysis**
+## V1
 
-V1 is focused on implementing the following functionality:
+* Accept a source file through the command line
+* Validate the provided file path
+* Read source-code files
+* Generate an analysis prompt
+* Send the prompt to a local LLM
+* Receive the model response
+* Display the analysis in the terminal
 
-```text
-File Path
-   |
-   v
-Validate File
-   |
-   v
-Read File
-   |
-   v
-Create Prompt
-   |
-   v
-Send to Local LLM
-   |
-   v
-Receive Response
-   |
-   v
-Print Response
-```
+The current analysis covers:
 
-The following features are planned for later versions:
-
-- Multiple analysis commands
-- Code explanation
-- Code review
-- Project-level context
-- Multiple file analysis
-- Compiler integration
-- Error analysis
-- Tool calling
-- Controlled command execution
-- Safe file modification
-- Automated testing
-- Local project memory
+* What the code does
+* Potential bugs
+* Memory and safety issues
+* Possible improvements
 
 ---
 
 # Requirements
 
-The current development environment uses:
+* Linux
+* Python 3
+* Git
+* Ollama
+* Qwen3-Coder 30B
+* GitHub
 
-- Linux
-- Python 3
-- Git
-- A locally hosted LLM
-- GitHub
-
-Python version can be checked with:
+Check Python:
 
 ```bash
-python3 --version
+python --version
 ```
 
-Git can be checked with:
+Check Git:
 
 ```bash
 git --version
 ```
 
-The local LLM runtime must expose a local API that CodeAI can communicate with.
+Check Ollama:
+
+```bash
+ollama --version
+```
+
+Check installed Ollama models:
+
+```bash
+ollama list
+```
+
+The current model used by CodeAI is:
+
+```text
+qwen3-coder:30b
+```
 
 ---
 
 # Installation
 
-## 1. Clone the repository
-
-Clone the repository using Git:
+## 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 ```
 
-Move into the project directory:
+Move into the project:
 
 ```bash
 cd codeai
 ```
 
-Verify the repository:
+---
+
+## 2. Create a Python Virtual Environment
+
+Create the virtual environment:
 
 ```bash
-ls
+python -m venv .venv
 ```
+
+Activate it:
+
+```bash
+source .venv/bin/activate
+```
+
+Verify Python:
+
+```bash
+which python
+```
+
+The Python executable should point to the active virtual environment.
 
 ---
 
-## 2. Create the project directories
+## 3. Install the Ollama Python Client
 
-Create the source and test directories:
-
-```bash
-mkdir -p src test
-```
-
-Create the initial files:
+Install the dependency:
 
 ```bash
-touch src/main.py
-touch test/sample.c
+python -m pip install ollama
 ```
 
-The project structure should now be:
+Verify the installation:
+
+```bash
+python -m pip show ollama
+```
+
+The virtual environment should remain active while running CodeAI.
+
+---
+
+# Ollama Setup
+
+CodeAI uses Ollama as the local LLM runtime.
+
+The current model is:
+
+```text
+qwen3-coder:30b
+```
+
+Check available models:
+
+```bash
+ollama list
+```
+
+The model can also be tested directly:
+
+```bash
+ollama run qwen3-coder:30b
+```
+
+The communication flow is:
+
+```text
+CodeAI
+   |
+   v
+Ollama Python Client
+   |
+   v
+Ollama
+   |
+   v
+Qwen3-Coder 30B
+```
+
+The model runs locally on the machine.
+
+---
+
+# Project Structure
 
 ```text
 codeai/
+|
 ├── src/
 │   └── main.py
+|
 ├── test/
 │   └── sample.c
+|
 ├── README.md
 ├── .gitignore
 └── LICENSE
 ```
 
+### `src/main.py`
+
+The main application entry point.
+
+It currently handles:
+
+* Command-line arguments
+* File validation
+* File reading
+* Prompt creation
+* Communication with Ollama
+* Displaying the LLM response
+
+### `test/sample.c`
+
+A small C source file used to test the CodeAI pipeline.
+
+### `README.md`
+
+Project documentation.
+
+### `.gitignore`
+
+Specifies files and directories that should not be tracked by Git.
+
+### `LICENSE`
+
+Contains the MIT License.
+
 ---
 
-# Running the Current Version
+# Running CodeAI
 
-The initial application can be started with:
-
-```bash
-python3 src/main.py
-```
-
-As development progresses, the intended command-line interface will be:
+Activate the virtual environment:
 
 ```bash
-python3 src/main.py <file>
+source .venv/bin/activate
 ```
 
-For example:
+Run CodeAI with a source file:
 
 ```bash
-python3 src/main.py test/sample.c
+python src/main.py test/sample.c
 ```
 
-The program will read the specified source file and pass its contents to the configured local LLM for analysis.
+The application reads the source file, builds an analysis prompt, sends it to the local Qwen3-Coder 30B model through Ollama, and displays the generated response in the terminal.
 
 ---
 
-# Example Source File
+# Example
 
-The initial test file can contain:
+The current `test/sample.c` can contain:
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int *ptr = NULL;
-
-    printf("%d", *ptr);
-
+    printf("Hello from CodeAI\n");
     return 0;
 }
 ```
 
-The intended V1 execution flow is:
+Run:
+
+```bash
+python src/main.py test/sample.c
+```
+
+The execution flow is:
 
 ```text
-python3 src/main.py test/sample.c
+python src/main.py test/sample.c
               |
               v
        Read sample.c
@@ -210,7 +315,10 @@ python3 src/main.py test/sample.c
        Build analysis prompt
               |
               v
-         Local LLM
+            Ollama
+              |
+              v
+       Qwen3-Coder 30B
               |
               v
        Receive response
@@ -219,24 +327,38 @@ python3 src/main.py test/sample.c
         Print response
 ```
 
-A response may contain information such as:
+The model generates an analysis covering:
 
-```text
-Explanation:
-The program attempts to dereference a NULL pointer.
-
-Problem:
-The pointer does not point to a valid memory location.
-
-Potential Result:
-Dereferencing the pointer can cause a segmentation fault.
-
-Suggested Improvement:
-Initialize the pointer with a valid memory address before
-dereferencing it.
-```
+* What the code does
+* Potential bugs
+* Memory and safety issues
+* Possible improvements
 
 The exact response depends on the locally hosted model.
+
+---
+
+# Analysis Prompt
+
+The current V1 prompt asks the model to:
+
+1. Explain what the code does.
+2. Identify potential bugs.
+3. Identify potential memory or safety issues.
+4. Suggest possible improvements.
+
+Conceptually, the prompt contains:
+
+```text
+Instructions
+     +
+Source Code
+     |
+     v
+Analysis Prompt
+```
+
+The generated prompt is sent to the local Qwen3-Coder 30B model through Ollama.
 
 ---
 
@@ -250,7 +372,7 @@ The exact response depends on the locally hosted model.
                           | CLI command
                           v
                   +----------------+
-                  |    CodeAI CLI   |
+                  |    CodeAI CLI  |
                   +-------+--------+
                           |
                           | File path
@@ -268,7 +390,13 @@ The exact response depends on the locally hosted model.
                           | Prompt
                           v
                   +----------------+
-                  |    Local LLM   |
+                  |     Ollama     |
+                  +-------+--------+
+                          |
+                          | Model request
+                          v
+                  +----------------+
+                  | Qwen3-Coder 30B|
                   +-------+--------+
                           |
                           | Response
@@ -284,32 +412,49 @@ The exact response depends on the locally hosted model.
 
 ## CLI
 
-The command-line interface accepts input from the user.
+The CLI accepts the source-code file path.
 
 Example:
 
 ```bash
-python3 src/main.py test/sample.c
+python src/main.py test/sample.c
 ```
 
-The CLI extracts the provided file path and passes it to the application.
+The file path is received through command-line arguments.
+
+---
+
+## File Validation
+
+CodeAI checks whether the supplied path points to an existing file.
+
+Example:
+
+```bash
+python src/main.py test/missing.c
+```
+
+Expected output:
+
+```text
+Error: File not found: test/missing.c
+```
 
 ---
 
 ## File Reader
 
-The file reader is responsible for:
+The file reader:
 
-1. Checking whether the file exists.
-2. Opening the file.
-3. Reading its contents.
-4. Handling file-related errors.
-5. Returning the source code to the application.
+1. Opens the source file.
+2. Reads its contents.
+3. Stores the source code.
+4. Passes the source code to the prompt builder.
 
-Example:
+Flow:
 
 ```text
-test/sample.c
+Source File
      |
      v
 File Reader
@@ -322,34 +467,35 @@ Source Code
 
 ## Prompt Builder
 
-The source code is combined with instructions for the LLM.
-
-A basic prompt can contain:
+The source code is combined with the analysis instructions.
 
 ```text
-Review the following source code.
-
-Explain:
-1. What the code does.
-2. Potential bugs.
-3. Potential memory or safety issues.
-4. Possible improvements.
-
-Source code:
-<source code>
+Instructions
+     +
+Source Code
+     |
+     v
+Analysis Prompt
 ```
-
-The prompt is then sent to the local LLM.
 
 ---
 
 ## Local LLM
 
-The local model receives the prompt and generates an analysis.
+CodeAI communicates with the locally hosted Qwen3-Coder 30B model through Ollama.
 
-The application communicates with the model through its locally available API.
-
-No external cloud model is required for the intended architecture.
+```text
+CodeAI
+   |
+   v
+Ollama Python Client
+   |
+   v
+Ollama
+   |
+   v
+Qwen3-Coder 30B
+```
 
 ---
 
@@ -369,11 +515,21 @@ Terminal
 
 ---
 
-# Development Roadmap
+# V1 Implementation Checklist
 
-## V1 — Basic Code Analysis
+* [x] Create project structure
+* [x] Create Python entry point
+* [x] Accept command-line arguments
+* [x] Validate file path
+* [x] Read source file
+* [x] Handle file errors
+* [x] Build analysis prompt
+* [x] Connect to local LLM
+* [x] Send request
+* [x] Receive response
+* [x] Display response
 
-The first version contains only the fundamental pipeline.
+### Complete V1 Pipeline
 
 ```text
 File
@@ -385,7 +541,10 @@ Read
 Prompt
  |
  v
-Local LLM
+Ollama
+ |
+ v
+Qwen3-Coder
  |
  v
 Response
@@ -394,38 +553,26 @@ Response
 Terminal
 ```
 
-Implementation checklist:
-
-- [ ] Create project structure
-- [ ] Create Python entry point
-- [ ] Accept command-line arguments
-- [ ] Validate file path
-- [ ] Read source file
-- [ ] Handle file errors
-- [ ] Build prompt
-- [ ] Connect to local LLM
-- [ ] Send request
-- [ ] Receive response
-- [ ] Display response
-
 ---
 
-# V2 — Multiple Commands
+# Roadmap
 
-The command-line interface can be extended with different operations.
+## V2 — Multiple Analysis Commands
 
-Example:
+The next version will introduce different analysis modes.
+
+Planned commands:
 
 ```bash
-python3 src/main.py explain test/sample.c
+python src/main.py explain test/sample.c
 ```
 
 ```bash
-python3 src/main.py review test/sample.c
+python src/main.py review test/sample.c
 ```
 
 ```bash
-python3 src/main.py debug test/sample.c
+python src/main.py debug test/sample.c
 ```
 
 Possible commands:
@@ -436,30 +583,56 @@ review
 debug
 ```
 
-Each command can use a different prompt and analysis objective.
+### Explain
+
+```text
+explain
+   |
+   v
+Explain code structure and behavior
+```
+
+### Review
+
+```text
+review
+   |
+   v
+Find bugs, risks, and improvements
+```
+
+### Debug
+
+```text
+debug
+   |
+   v
+Analyze errors and possible causes
+```
 
 ---
 
 # V3 — Project Context
 
-Instead of analyzing only one file, CodeAI will be able to understand a project directory.
+Instead of analyzing only one file, CodeAI will eventually be able to inspect an entire project.
 
 Example:
 
 ```text
 project/
+|
 ├── src/
 │   ├── main.c
 │   ├── hash_table.c
 │   └── hash_table.h
+|
 ├── tests/
 │   └── test_hash.c
+|
 └── README.md
 ```
 
-The application can inspect the project structure and provide relevant files to the model.
-
-The flow becomes:
+Planned flow:
 
 ```text
 Project Directory
@@ -484,9 +657,9 @@ Analysis
 
 # V4 — Compiler Integration
 
-CodeAI can eventually compile source code and provide compiler output to the LLM.
+A future version will allow CodeAI to compile source code and analyze compiler output.
 
-Example:
+Planned flow:
 
 ```text
 Source Code
@@ -494,38 +667,30 @@ Source Code
      v
 Compiler
      |
-     +---- Success
-     |
-     +---- Error
-             |
-             v
-        Compiler Output
-             |
-             v
-          Local LLM
+     +--------------------+
+     |                    |
+     v                    v
+  Success                Error
+                          |
+                          v
+                  Compiler Output
+                          |
+                          v
+                      Local LLM
+                          |
+                          v
+                       Analysis
 ```
 
-For C code, the system can eventually integrate with tools such as:
-
-```bash
-gcc
-```
-
-or:
-
-```bash
-clang
-```
-
-The compiler output can then be analyzed by the local model.
+For C and C++ projects, compilers such as GCC and Clang can be integrated.
 
 ---
 
 # V5 — Tool Calling
 
-The model can eventually request controlled tools instead of only receiving source code.
+A future version can allow the model to request controlled tools.
 
-Possible tools:
+Potential tools:
 
 ```text
 read_file()
@@ -535,7 +700,7 @@ compile_code()
 run_test()
 ```
 
-Architecture:
+Planned architecture:
 
 ```text
                        Local LLM
@@ -554,15 +719,15 @@ Architecture:
                        Local LLM
 ```
 
-Tools must be explicitly controlled by the application.
+Tools will be explicitly controlled by the application.
 
 ---
 
 # V6 — Safe Code Modification
 
-A future version can allow the model to suggest or generate changes.
+A future version can allow CodeAI to generate changes to source files.
 
-The intended workflow is:
+Planned workflow:
 
 ```text
 Read Code
@@ -592,7 +757,9 @@ The application should not automatically modify files without user approval.
 
 # V7 — Local Coding Agent
 
-The final planned architecture is a project-aware local coding agent.
+The long-term goal is to evolve CodeAI into a project-aware local coding agent.
+
+Planned architecture:
 
 ```text
                          User
@@ -606,108 +773,94 @@ The final planned architecture is a project-aware local coding agent.
           +---------------+---------------+
           |               |               |
           v               v               v
-     File System       Compiler       Search
+     File System       Compiler        Search
           |               |               |
           +---------------+---------------+
                           |
                           v
-                    Local LLM
+                      Local LLM
                           |
                           v
-                    Decision
+                       Decision
                           |
                           v
-                    Tool Call
+                       Tool Call
                           |
                           v
-                     Result
+                         Result
                           |
                           v
-                    Local LLM
+                      Local LLM
                           |
                           v
-                     Response
+                       Response
 ```
 
 The agent can eventually:
 
-- Understand project structure
-- Read relevant files
-- Search source code
-- Analyze compiler errors
-- Run controlled tests
-- Explain problems
-- Suggest changes
-- Apply approved changes
-- Verify the result
+* Understand project structure
+* Read relevant files
+* Search source code
+* Analyze compiler errors
+* Run controlled tests
+* Explain problems
+* Suggest changes
+* Apply approved changes
+* Verify the result
 
 ---
 
 # Error Handling
 
-CodeAI should handle common errors gracefully.
-
-## Missing file
+## Missing File
 
 ```bash
-python3 src/main.py test/missing.c
+python src/main.py test/missing.c
 ```
 
-Expected behavior:
+Expected output:
 
 ```text
 Error: File not found: test/missing.c
 ```
 
----
-
-## Invalid arguments
+## Missing Command-Line Argument
 
 ```bash
-python3 src/main.py
+python src/main.py
 ```
 
-Expected behavior:
+Expected output:
 
 ```text
-Usage: python3 src/main.py <file>
+Usage: python src/main.py <file>
 ```
 
----
+## Empty File
 
-## Empty file
+Empty-file handling is planned for a future version.
 
-The application should detect an empty source file and provide an appropriate message rather than sending an empty request to the model.
+## Local LLM Unavailable
 
----
-
-## LLM unavailable
-
-If the local LLM service is not running:
-
-```text
-Error: Local LLM service is unavailable.
-```
-
-The application should exit cleanly instead of crashing.
+Future versions will provide a clear error message if the Ollama service is unavailable.
 
 ---
 
 # Security Considerations
 
-The initial version only reads source files and sends their contents to the locally hosted model.
+The current version only reads source files and sends their contents to the locally hosted model.
 
-Future versions will require additional security controls when they gain the ability to execute commands or modify files.
+Future versions will require additional security controls when CodeAI gains the ability to execute commands or modify files.
 
 Planned controls include:
 
-- User confirmation before file modification
-- Restricted command execution
-- Command allowlists
-- Sandboxed execution
-- Restricted working directories
-- Protection against destructive commands
-- Controlled tool permissions
+* User confirmation before file modification
+* Restricted command execution
+* Command allowlists
+* Sandboxed execution
+* Restricted working directories
+* Protection against destructive commands
+* Controlled tool permissions
 
 CodeAI should never blindly execute commands generated by an LLM.
 
@@ -715,7 +868,7 @@ CodeAI should never blindly execute commands generated by an LLM.
 
 # Testing
 
-Testing will use small source-code files during development.
+The current testing process uses small source-code files.
 
 Initial test directory:
 
@@ -724,7 +877,13 @@ test/
 └── sample.c
 ```
 
-Future tests will cover:
+Run:
+
+```bash
+python src/main.py test/sample.c
+```
+
+Future testing will cover:
 
 ```text
 Valid source files
@@ -738,17 +897,23 @@ LLM connection failures
 Malformed responses
 ```
 
+Future versions can introduce automated tests for individual components.
+
 ---
 
 # Git Workflow
 
-Check the current repository status:
+Development is organized around logical changes.
+
+Each meaningful implementation step is committed separately.
+
+Check repository status:
 
 ```bash
 git status
 ```
 
-Add files:
+Stage changes:
 
 ```bash
 git add .
@@ -757,7 +922,7 @@ git add .
 Create a commit:
 
 ```bash
-git commit -m "Initialize CodeAI project"
+git commit -m "Add <description>"
 ```
 
 Push changes:
@@ -772,6 +937,26 @@ View commit history:
 git log --oneline
 ```
 
+Example commit messages:
+
+```text
+Initialize CodeAI project
+Add CLI file input
+Add file validation
+Add source file reader
+Add prompt generation
+Integrate Ollama
+Add local code analysis
+```
+
+Example:
+
+```bash
+git add .
+git commit -m "Integrate Ollama"
+git push
+```
+
 ---
 
 # Development Commands
@@ -779,19 +964,43 @@ git log --oneline
 Check Python:
 
 ```bash
-python3 --version
+python --version
 ```
 
-Run the application:
+Check Git:
 
 ```bash
-python3 src/main.py
+git --version
 ```
 
-Run with a source file:
+Check Ollama:
 
 ```bash
-python3 src/main.py test/sample.c
+ollama --version
+```
+
+List Ollama models:
+
+```bash
+ollama list
+```
+
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Install the Ollama Python client:
+
+```bash
+python -m pip install ollama
+```
+
+Run CodeAI:
+
+```bash
+python src/main.py test/sample.c
 ```
 
 Check Git status:
@@ -800,17 +1009,21 @@ Check Git status:
 git status
 ```
 
+View commit history:
+
+```bash
+git log --oneline
+```
+
 ---
 
 # Planned Project Structure
 
-The initial structure is intentionally small.
-
-As the project grows, it can evolve into:
+As the project grows, the structure can evolve into:
 
 ```text
 codeai/
-│
+|
 ├── src/
 │   ├── main.py
 │   ├── cli.py
@@ -819,18 +1032,51 @@ codeai/
 │   ├── llm.py
 │   ├── tools.py
 │   └── agent.py
-│
+|
 ├── test/
 │   ├── sample.c
 │   └── ...
-│
+|
 ├── README.md
 ├── LICENSE
 ├── .gitignore
 └── requirements.txt
 ```
 
-The additional modules will only be introduced when their functionality is required.
+Additional modules will only be introduced when their functionality is required.
+
+---
+
+# Development Roadmap
+
+```text
+V1
+Basic Code Analysis
+        |
+        v
+V2
+Multiple Analysis Commands
+        |
+        v
+V3
+Project Context
+        |
+        v
+V4
+Compiler Integration
+        |
+        v
+V5
+Tool Calling
+        |
+        v
+V6
+Safe Code Modification
+        |
+        v
+V7
+Local Coding Agent
+```
 
 ---
 
@@ -839,3 +1085,6 @@ The additional modules will only be introduced when their functionality is requi
 This project is licensed under the MIT License.
 
 See the `LICENSE` file for details.
+
+```
+```
