@@ -1,4 +1,3 @@
-````markdown
 # CodeAI
 
 CodeAI is a local command-line coding assistant that analyzes source code using a locally hosted Large Language Model (LLM).
@@ -51,39 +50,39 @@ Receive Response
     |
     v
 Display Analysis
-````
+```
 
 ---
 
-# Features
+## Features
 
-## V1
+### V1
 
-* Accept a source file through the command line
-* Validate the provided file path
-* Read source-code files
-* Generate an analysis prompt
-* Send the prompt to a local LLM
-* Receive the model response
-* Display the analysis in the terminal
+- Accept a source file through the command line
+- Validate the provided file path
+- Read source-code files
+- Generate an analysis prompt
+- Send the prompt to a local LLM
+- Receive the model response
+- Display the analysis in the terminal
 
 The current analysis covers:
 
-* What the code does
-* Potential bugs
-* Memory and safety issues
-* Possible improvements
+- What the code does
+- Potential bugs
+- Memory and safety issues
+- Possible improvements
 
 ---
 
-# Requirements
+## Requirements
 
-* Linux
-* Python 3
-* Git
-* Ollama
-* Qwen3-Coder 30B
-* GitHub
+- Linux
+- Python 3
+- Git
+- Ollama
+- Qwen3-Coder 30B
+- GitHub
 
 Check Python:
 
@@ -117,9 +116,9 @@ qwen3-coder:30b
 
 ---
 
-# Installation
+## Installation
 
-## 1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
@@ -131,17 +130,13 @@ Move into the project:
 cd codeai
 ```
 
----
-
-## 2. Create a Python Virtual Environment
-
-Create the virtual environment:
+### 2. Create a Python Virtual Environment
 
 ```bash
 python -m venv .venv
 ```
 
-Activate it:
+Activate the virtual environment:
 
 ```bash
 source .venv/bin/activate
@@ -153,13 +148,7 @@ Verify Python:
 which python
 ```
 
-The Python executable should point to the active virtual environment.
-
----
-
-## 3. Install the Ollama Python Client
-
-Install the dependency:
+### 3. Install the Ollama Python Client
 
 ```bash
 python -m pip install ollama
@@ -175,7 +164,7 @@ The virtual environment should remain active while running CodeAI.
 
 ---
 
-# Ollama Setup
+## Ollama Setup
 
 CodeAI uses Ollama as the local LLM runtime.
 
@@ -191,13 +180,13 @@ Check available models:
 ollama list
 ```
 
-The model can also be tested directly:
+Run the model manually:
 
 ```bash
 ollama run qwen3-coder:30b
 ```
 
-The communication flow is:
+Communication flow:
 
 ```text
 CodeAI
@@ -216,7 +205,7 @@ The model runs locally on the machine.
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```text
 codeai/
@@ -238,12 +227,12 @@ The main application entry point.
 
 It currently handles:
 
-* Command-line arguments
-* File validation
-* File reading
-* Prompt creation
-* Communication with Ollama
-* Displaying the LLM response
+- Command-line arguments
+- File validation
+- File reading
+- Prompt creation
+- Communication with Ollama
+- Displaying the LLM response
 
 ### `test/sample.c`
 
@@ -263,7 +252,7 @@ Contains the MIT License.
 
 ---
 
-# Running CodeAI
+## Running CodeAI
 
 Activate the virtual environment:
 
@@ -281,7 +270,7 @@ The application reads the source file, builds an analysis prompt, sends it to th
 
 ---
 
-# Example
+## Example
 
 The current `test/sample.c` can contain:
 
@@ -329,16 +318,16 @@ python src/main.py test/sample.c
 
 The model generates an analysis covering:
 
-* What the code does
-* Potential bugs
-* Memory and safety issues
-* Possible improvements
+- What the code does
+- Potential bugs
+- Memory and safety issues
+- Possible improvements
 
 The exact response depends on the locally hosted model.
 
 ---
 
-# Analysis Prompt
+## Analysis Prompt
 
 The current V1 prompt asks the model to:
 
@@ -347,7 +336,7 @@ The current V1 prompt asks the model to:
 3. Identify potential memory or safety issues.
 4. Suggest possible improvements.
 
-Conceptually, the prompt contains:
+Conceptually:
 
 ```text
 Instructions
@@ -362,9 +351,9 @@ The generated prompt is sent to the local Qwen3-Coder 30B model through Ollama.
 
 ---
 
-# Architecture
+## Architecture
 
-## V1 Architecture
+### V1 Architecture
 
 ```text
                          User
@@ -408,9 +397,9 @@ The generated prompt is sent to the local Qwen3-Coder 30B model through Ollama.
 
 ---
 
-# Component Responsibilities
+## Component Responsibilities
 
-## CLI
+### CLI
 
 The CLI accepts the source-code file path.
 
@@ -422,9 +411,7 @@ python src/main.py test/sample.c
 
 The file path is received through command-line arguments.
 
----
-
-## File Validation
+### File Validation
 
 CodeAI checks whether the supplied path points to an existing file.
 
@@ -440,9 +427,7 @@ Expected output:
 Error: File not found: test/missing.c
 ```
 
----
-
-## File Reader
+### File Reader
 
 The file reader:
 
@@ -463,9 +448,7 @@ File Reader
 Source Code
 ```
 
----
-
-## Prompt Builder
+### Prompt Builder
 
 The source code is combined with the analysis instructions.
 
@@ -478,9 +461,7 @@ Source Code
 Analysis Prompt
 ```
 
----
-
-## Local LLM
+### Local LLM
 
 CodeAI communicates with the locally hosted Qwen3-Coder 30B model through Ollama.
 
@@ -497,9 +478,7 @@ Ollama
 Qwen3-Coder 30B
 ```
 
----
-
-## Terminal Output
+### Terminal Output
 
 The generated response is displayed directly in the terminal.
 
@@ -515,19 +494,19 @@ Terminal
 
 ---
 
-# V1 Implementation Checklist
+## V1 Implementation Checklist
 
-* [x] Create project structure
-* [x] Create Python entry point
-* [x] Accept command-line arguments
-* [x] Validate file path
-* [x] Read source file
-* [x] Handle file errors
-* [x] Build analysis prompt
-* [x] Connect to local LLM
-* [x] Send request
-* [x] Receive response
-* [x] Display response
+- [x] Create project structure
+- [x] Create Python entry point
+- [x] Accept command-line arguments
+- [x] Validate file path
+- [x] Read source file
+- [x] Handle file errors
+- [x] Build analysis prompt
+- [x] Connect to local LLM
+- [x] Send request
+- [x] Receive response
+- [x] Display response
 
 ### Complete V1 Pipeline
 
@@ -555,11 +534,9 @@ Terminal
 
 ---
 
-# Roadmap
+## Roadmap
 
-## V2 — Multiple Analysis Commands
-
-The next version will introduce different analysis modes.
+### V2 — Multiple Analysis Commands
 
 Planned commands:
 
@@ -612,9 +589,9 @@ Analyze errors and possible causes
 
 ---
 
-# V3 — Project Context
+### V3 — Project Context
 
-Instead of analyzing only one file, CodeAI will eventually be able to inspect an entire project.
+CodeAI will eventually be able to inspect an entire project instead of only one file.
 
 Example:
 
@@ -655,7 +632,7 @@ Analysis
 
 ---
 
-# V4 — Compiler Integration
+### V4 — Compiler Integration
 
 A future version will allow CodeAI to compile source code and analyze compiler output.
 
@@ -686,7 +663,7 @@ For C and C++ projects, compilers such as GCC and Clang can be integrated.
 
 ---
 
-# V5 — Tool Calling
+### V5 — Tool Calling
 
 A future version can allow the model to request controlled tools.
 
@@ -723,7 +700,7 @@ Tools will be explicitly controlled by the application.
 
 ---
 
-# V6 — Safe Code Modification
+### V6 — Safe Code Modification
 
 A future version can allow CodeAI to generate changes to source files.
 
@@ -755,7 +732,7 @@ The application should not automatically modify files without user approval.
 
 ---
 
-# V7 — Local Coding Agent
+### V7 — Local Coding Agent
 
 The long-term goal is to evolve CodeAI into a project-aware local coding agent.
 
@@ -798,21 +775,21 @@ Planned architecture:
 
 The agent can eventually:
 
-* Understand project structure
-* Read relevant files
-* Search source code
-* Analyze compiler errors
-* Run controlled tests
-* Explain problems
-* Suggest changes
-* Apply approved changes
-* Verify the result
+- Understand project structure
+- Read relevant files
+- Search source code
+- Analyze compiler errors
+- Run controlled tests
+- Explain problems
+- Suggest changes
+- Apply approved changes
+- Verify the result
 
 ---
 
-# Error Handling
+## Error Handling
 
-## Missing File
+### Missing File
 
 ```bash
 python src/main.py test/missing.c
@@ -824,7 +801,7 @@ Expected output:
 Error: File not found: test/missing.c
 ```
 
-## Missing Command-Line Argument
+### Missing Command-Line Argument
 
 ```bash
 python src/main.py
@@ -836,17 +813,17 @@ Expected output:
 Usage: python src/main.py <file>
 ```
 
-## Empty File
+### Empty File
 
 Empty-file handling is planned for a future version.
 
-## Local LLM Unavailable
+### Local LLM Unavailable
 
 Future versions will provide a clear error message if the Ollama service is unavailable.
 
 ---
 
-# Security Considerations
+## Security Considerations
 
 The current version only reads source files and sends their contents to the locally hosted model.
 
@@ -854,19 +831,19 @@ Future versions will require additional security controls when CodeAI gains the 
 
 Planned controls include:
 
-* User confirmation before file modification
-* Restricted command execution
-* Command allowlists
-* Sandboxed execution
-* Restricted working directories
-* Protection against destructive commands
-* Controlled tool permissions
+- User confirmation before file modification
+- Restricted command execution
+- Command allowlists
+- Sandboxed execution
+- Restricted working directories
+- Protection against destructive commands
+- Controlled tool permissions
 
 CodeAI should never blindly execute commands generated by an LLM.
 
 ---
 
-# Testing
+## Testing
 
 The current testing process uses small source-code files.
 
@@ -901,7 +878,7 @@ Future versions can introduce automated tests for individual components.
 
 ---
 
-# Git Workflow
+## Git Workflow
 
 Development is organized around logical changes.
 
@@ -959,7 +936,7 @@ git push
 
 ---
 
-# Development Commands
+## Development Commands
 
 Check Python:
 
@@ -1017,7 +994,7 @@ git log --oneline
 
 ---
 
-# Planned Project Structure
+## Planned Project Structure
 
 As the project grows, the structure can evolve into:
 
@@ -1047,7 +1024,7 @@ Additional modules will only be introduced when their functionality is required.
 
 ---
 
-# Development Roadmap
+## Development Roadmap
 
 ```text
 V1
@@ -1080,10 +1057,8 @@ Local Coding Agent
 
 ---
 
-# License
+## License
 
 This project is licensed under the MIT License.
 
 See the `LICENSE` file for details.
-
-```
