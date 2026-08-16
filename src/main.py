@@ -1,5 +1,6 @@
 import sys
 import os
+import ollama
 
 if len(sys.argv) < 2:
     print("Usage: python src/main.py <file>")
@@ -28,4 +29,14 @@ Source code:
 {code}
 """
 
-print(prompt)
+response = ollama.chat(
+    model="qwen3-coder:30b",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+
+print(response["message"]["content"])
