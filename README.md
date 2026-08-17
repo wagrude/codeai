@@ -2,7 +2,7 @@
 
 CodeAI is a local command-line coding assistant that analyzes source code using a locally hosted Large Language Model (LLM).
 
-The current version accepts a source-code file from the command line, reads its contents, builds an analysis prompt, sends the prompt to a local Qwen3-Coder 30B model through Ollama, and displays the generated analysis directly in the terminal.
+The current version accepts an analysis command and a source-code file from the command line, reads its contents, builds a command-specific analysis prompt, sends the prompt to a local Qwen3-Coder 30B model through Ollama, and displays the generated response directly in the terminal.
 
 The project is being developed incrementally, starting with basic code analysis and progressing toward a project-aware local coding agent.
 
@@ -155,7 +155,6 @@ Available commands: explain, review, debug
 - Git
 - Ollama
 - Qwen3-Coder 30B
-- GitHub
 
 Check Python:
 
@@ -188,7 +187,6 @@ qwen3-coder:30b
 ```
 
 ---
-
 ## Installation
 
 ### 1. Clone the Repository
@@ -236,7 +234,6 @@ python -m pip show ollama
 The virtual environment should remain active while running CodeAI.
 
 ---
-
 ## Ollama Setup
 
 CodeAI uses Ollama as the local LLM runtime.
@@ -277,7 +274,6 @@ Qwen3-Coder 30B
 The model runs locally on the machine.
 
 ---
-
 ## Project Structure
 
 ```text
@@ -300,16 +296,17 @@ The main application entry point.
 
 It currently handles:
 
-- Command-line arguments
-- File validation
-- File reading
-- Prompt creation
-- Communication with Ollama
-- Displaying the LLM response
+* Command-line arguments
+* Command validation
+* File validation
+* File reading
+* Command-specific prompt creation
+* Communication with Ollama
+* Displaying the LLM response
 
 ### `test/sample.c`
 
-A small C source file used to test the CodeAI pipeline.
+A small C source file used to test the CodeAI analysis modes.
 
 ### `README.md`
 
@@ -371,22 +368,22 @@ int main() {
 Run:
 
 ```bash
-python src/main.py test/sample.c
+python src/main.py review test/sample.c
 ```
 
 The execution flow is:
 
 ```text
-python src/main.py test/sample.c
+python src/main.py review test/sample.c
               |
               v
        Read sample.c
               |
               v
-       Extract source code
+       Detect "review"
               |
               v
-       Build analysis prompt
+       Build review prompt
               |
               v
             Ollama
@@ -401,16 +398,17 @@ python src/main.py test/sample.c
         Print response
 ```
 
-The model generates an analysis covering:
+The model generates a review covering:
 
-- What the code does
-- Potential bugs
-- Memory and safety issues
-- Possible improvements
+* What the code does
+* Potential bugs
+* Memory and safety issues
+* Possible improvements
 
 The exact response depends on the locally hosted model.
 
 ---
+
 ## Analysis Prompt
 
 V2 selects the analysis prompt based on the command provided by the user.
@@ -525,15 +523,20 @@ The selected prompt is sent to the local Qwen3-Coder 30B model through Ollama.
 
 ### CLI
 
-The CLI accepts the source-code file path.
+The CLI accepts:
 
-Example:
+* An analysis command
+* A source-code file path
+
+Examples:
 
 ```bash
-python src/main.py test/sample.c
+python src/main.py explain test/sample.c
+python src/main.py review test/sample.c
+python src/main.py debug test/sample.c
 ```
 
-The file path is received through command-line arguments.
+The command and file path are received through command-line arguments. The selected command determines the analysis mode.
 
 ### File Validation
 
@@ -542,7 +545,7 @@ CodeAI checks whether the supplied path points to an existing file.
 Example:
 
 ```bash
-python src/main.py test/missing.c
+python src/main.py review test/missing.c
 ```
 
 Expected output:
@@ -574,15 +577,15 @@ Source Code
 
 ### Prompt Builder
 
-The source code is combined with the analysis instructions.
+The selected analysis command determines the prompt instructions. The source code is combined with the appropriate analysis instructions.
 
 ```text
-Instructions
-     +
+Analysis Command
+       +
 Source Code
-     |
-     v
-Analysis Prompt
+       |
+       v
+Command-Specific Prompt
 ```
 
 ### Local LLM
@@ -617,6 +620,7 @@ Terminal
 ```
 
 ---
+
 ## V1 Implementation Checklist
 
 - [x] Create project structure
@@ -895,7 +899,7 @@ The agent can eventually:
 ### Missing File
 
 ```bash
-python src/main.py test/missing.c
+python src/main.py review test/missing.c
 ```
 
 Expected output:
@@ -904,7 +908,7 @@ Expected output:
 Error: File not found: test/missing.c
 ```
 
-### Missing Command-Line Argument
+### Missing Command-Line Arguments
 
 ```bash
 python src/main.py
@@ -913,7 +917,20 @@ python src/main.py
 Expected output:
 
 ```text
-Usage: python src/main.py <file>
+Usage: python src/main.py <command> <file>
+```
+
+### Invalid Command
+
+```bash
+python src/main.py debg test/sample.c
+```
+
+Expected output:
+
+```text
+Unknown command: debg
+Available commands: explain, review, debug
 ```
 
 ### Empty File
@@ -957,10 +974,24 @@ test/
 └── sample.c
 ```
 
-Run:
+Run the available analysis modes:
 
 ```bash
-python src/main.py test/sample.c
+python src/main.py explain test/sample.c
+python src/main.py review test/sample.c
+python src/main.py debug test/sample.c
+```
+
+Test invalid command handling:
+
+```bash
+python src/main.py debg test/sample.c
+```
+
+Test missing file handling:
+
+```bash
+python src/main.py review test/missing.c
 ```
 
 Future testing will cover:
@@ -1027,13 +1058,18 @@ Add source file reader
 Add prompt generation
 Integrate Ollama
 Add local code analysis
+Add CLI command argument
+Add explain command
+Add review command
+Add debug command
+Add invalid command handling
 ```
 
 Example:
 
 ```bash
 git add .
-git commit -m "Integrate Ollama"
+git commit -m "Add debug command"
 git push
 ```
 
@@ -1080,7 +1116,9 @@ python -m pip install ollama
 Run CodeAI:
 
 ```bash
-python src/main.py test/sample.c
+python src/main.py explain test/sample.c
+python src/main.py review test/sample.c
+python src/main.py debug test/sample.c
 ```
 
 Check Git status:
