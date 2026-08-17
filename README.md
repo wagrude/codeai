@@ -333,13 +333,25 @@ Activate the virtual environment:
 source .venv/bin/activate
 ```
 
-Run CodeAI with a source file:
+### Explain
 
 ```bash
-python src/main.py test/sample.c
+python src/main.py explain test/sample.c
 ```
 
-The application reads the source file, builds an analysis prompt, sends it to the local Qwen3-Coder 30B model through Ollama, and displays the generated response in the terminal.
+### Review
+
+```bash
+python src/main.py review test/sample.c
+```
+
+### Debug
+
+```bash
+python src/main.py debug test/sample.c
+```
+
+CodeAI reads the source file, selects the requested analysis mode, builds the appropriate prompt, sends it to the local Qwen3-Coder 30B model through Ollama, and displays the generated response in the terminal.
 
 ---
 
@@ -399,28 +411,67 @@ The model generates an analysis covering:
 The exact response depends on the locally hosted model.
 
 ---
-
 ## Analysis Prompt
 
-The current V1 prompt asks the model to:
+V2 selects the analysis prompt based on the command provided by the user.
 
-1. Explain what the code does.
-2. Identify potential bugs.
-3. Identify potential memory or safety issues.
-4. Suggest possible improvements.
-
-Conceptually:
+### Explain
 
 ```text
-Instructions
-     +
-Source Code
-     |
-     v
-Analysis Prompt
+Command
+   |
+   v
+Explain Prompt
+   |
+   v
+Qwen3-Coder 30B
 ```
 
-The generated prompt is sent to the local Qwen3-Coder 30B model through Ollama.
+The explain prompt focuses on:
+
+1. What the code does.
+2. How the main parts work.
+3. The overall program flow.
+
+### Review
+
+```text
+Command
+   |
+   v
+Review Prompt
+   |
+   v
+Qwen3-Coder 30B
+```
+
+The review prompt focuses on:
+
+1. What the code does.
+2. Potential bugs.
+3. Potential memory or safety issues.
+4. Possible improvements.
+
+### Debug
+
+```text
+Command
+   |
+   v
+Debug Prompt
+   |
+   v
+Qwen3-Coder 30B
+```
+
+The debug prompt focuses on:
+
+1. What the code is supposed to do.
+2. Possible errors or problems.
+3. Why those problems occur.
+4. How they can be fixed.
+
+The selected prompt is sent to the local Qwen3-Coder 30B model through Ollama.
 
 ---
 
@@ -566,7 +617,6 @@ Terminal
 ```
 
 ---
-
 ## V1 Implementation Checklist
 
 - [x] Create project structure
@@ -607,60 +657,40 @@ Terminal
 
 ---
 
-## Roadmap
+## V2 Implementation Checklist
 
-### V2 — Multiple Analysis Commands
+- [x] Add CLI command argument
+- [x] Add `explain` command
+- [x] Add `review` command
+- [x] Add `debug` command
+- [x] Add invalid command handling
+- [x] Test all analysis modes
 
-Planned commands:
-
-```bash
-python src/main.py explain test/sample.c
-```
-
-```bash
-python src/main.py review test/sample.c
-```
-
-```bash
-python src/main.py debug test/sample.c
-```
-
-Possible commands:
+### Complete V2 Pipeline
 
 ```text
-explain
-review
-debug
-```
-
-### Explain
-
-```text
-explain
-   |
-   v
-Explain code structure and behavior
-```
-
-### Review
-
-```text
-review
-   |
-   v
-Find bugs, risks, and improvements
-```
-
-### Debug
-
-```text
-debug
-   |
-   v
-Analyze errors and possible causes
+                    CodeAI CLI
+                         |
+             +-----------+-----------+
+             |           |           |
+          explain      review      debug
+             |           |           |
+             +-----------+-----------+
+                         |
+                   Prompt Builder
+                         |
+                       Ollama
+                         |
+                  Qwen3-Coder 30B
+                         |
+                      Response
+                         |
+                   Terminal Output
 ```
 
 ---
+
+## Roadmap
 
 ### V3 — Project Context
 
