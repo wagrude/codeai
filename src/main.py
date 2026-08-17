@@ -2,11 +2,12 @@ import sys
 import os
 import ollama
 
-if len(sys.argv) < 2:
-    print("Usage: python src/main.py <file>")
+if len(sys.argv) < 3:
+    print("Usage: python src/main.py <command> <file>")
     sys.exit(1)
 
-file_path = sys.argv[1]
+command = sys.argv[1]
+file_path = sys.argv[2]
 
 if not os.path.isfile(file_path):
     print(f"Error: File not found: {file_path}")
