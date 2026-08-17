@@ -38,4 +38,5 @@ response = ollama.chat(
         }
     ]
 )
+
 print(response["message"]["content"])
