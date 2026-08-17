@@ -15,7 +15,6 @@ if not os.path.isfile(file_path):
 
 with open(file_path, "r") as file:
     code = file.read()
-
 if command == "explain":
     prompt = f"""
 Explain the following source code in simple terms.
@@ -24,6 +23,21 @@ Cover:
 1. What the code does.
 2. How the main parts work.
 3. The overall flow of the program.
+
+Source code:
+
+{code}
+"""
+
+elif command == "review":
+    prompt = f"""
+Review the following source code.
+
+Explain:
+1. What the code does.
+2. Potential bugs.
+3. Potential memory or safety issues.
+4. Possible improvements.
 
 Source code:
 
