@@ -79,25 +79,75 @@ python src/main.py debug test/sample.c
 ---
 ## Features
 
-### V1
+### V1 — Basic Code Analysis
 
 - Accept a source file through the command line
 - Validate the provided file path
 - Read source-code files
 - Generate an analysis prompt
-- Send the prompt to a local LLM
+- Send the prompt to a local LLM through Ollama
 - Receive the model response
 - Display the analysis in the terminal
 
-The current analysis covers:
+V1 analysis covers:
 
 - What the code does
 - Potential bugs
 - Memory and safety issues
 - Possible improvements
 
----
+### V2 — Multiple Analysis Commands
 
+CodeAI now supports multiple analysis modes through CLI commands.
+
+#### Explain
+
+```bash
+python src/main.py explain test/sample.c
+```
+
+Explains:
+
+- What the code does
+- How the main parts work
+- The overall program flow
+
+#### Review
+
+```bash
+python src/main.py review test/sample.c
+```
+
+Analyzes:
+
+- Potential bugs
+- Memory and safety issues
+- Code quality
+- Possible improvements
+
+#### Debug
+
+```bash
+python src/main.py debug test/sample.c
+```
+
+Analyzes:
+
+- What the code is supposed to do
+- Possible errors or problems
+- Why those problems may occur
+- How they can be fixed
+
+#### Command Validation
+
+CodeAI detects unsupported commands and displays the available commands:
+
+```text
+Unknown command: <command>
+Available commands: explain, review, debug
+```
+
+---
 ## Requirements
 
 - Linux
