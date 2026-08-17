@@ -7,53 +7,76 @@ The current version accepts a source-code file from the command line, reads its 
 The project is being developed incrementally, starting with basic code analysis and progressing toward a project-aware local coding agent.
 
 ---
-
 ## Current Status
 
-**Version: V1 — Basic Code Analysis**
+**Version: V2 — Multiple Analysis Commands**
 
-V1 is complete and currently supports:
+V1 is complete and provides the basic source-code analysis pipeline.
+
+V2 is complete and adds command-based analysis modes.
+
+### V1 — Basic Code Analysis
 
 - Command-line file input
 - File existence validation
 - Source-code reading
 - Prompt generation
 - Local LLM communication through Ollama
-- Code analysis and review
+- Basic code analysis
 - Terminal output
+
+### V2 — Multiple Analysis Commands
+
+- `explain` — Explains the code structure, behavior, and overall flow
+- `review` — Reviews the code for bugs, memory/safety issues, and improvements
+- `debug` — Analyzes possible errors, their causes, and potential fixes
+- Invalid command handling
+
+### Current Usage
+
+```bash
+python src/main.py explain test/sample.c
+```
+
+```bash
+python src/main.py review test/sample.c
+```
+
+```bash
+python src/main.py debug test/sample.c
+```
 
 ### Current Flow
 
 ```text
-Source File
-    |
-    v
-CodeAI CLI
-    |
-    v
-File Validation
-    |
-    v
-Read Source Code
-    |
-    v
-Build Analysis Prompt
-    |
-    v
-Ollama
-    |
-    v
-Qwen3-Coder 30B
-    |
-    v
-Receive Response
-    |
-    v
-Display Analysis
+                     CodeAI CLI
+                          |
+              +-----------+-----------+
+              |           |           |
+           explain      review      debug
+              |           |           |
+              +-----------+-----------+
+                          |
+                    Prompt Builder
+                          |
+                        Ollama
+                          |
+                   Qwen3-Coder 30B
+                          |
+                       Response
+                          |
+                    Terminal Output
 ```
 
----
+### V2 Status
 
+- [x] CLI command structure
+- [x] Explain command
+- [x] Review command
+- [x] Debug command
+- [x] Invalid command handling
+
+---
 ## Features
 
 ### V1
