@@ -34,9 +34,6 @@ def chunk_file(file_path, chunk_size=80, overlap=10):
 
     return chunks
 
-
-
-
 if __name__ == "__main__":
     chunks = chunk_file("test/sample.c", chunk_size=10, overlap=2)
 
