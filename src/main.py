@@ -2,20 +2,57 @@ import sys
 import os
 import ollama
 
+from src.codeai import CodeAI
+
+
 if len(sys.argv) < 3:
-    print("Usage: python src/main.py <command> <file>")
+    print("Usage:")
+    print("  python src/main.py <command> <file>")
+    print('  python src/main.py ask <project> "<question>"')
     sys.exit(1)
 
+
 command = sys.argv[1]
+
+
+# Repository-aware CodeAI
+if command == "ask":
+
+    if len(sys.argv) < 4:
+        print('Usage: python src/main.py ask <project> "<question>"')
+        sys.exit(1)
+
+    project_path = sys.argv[2]
+    question = sys.argv[3]
+
+    if not os.path.isdir(project_path):
+        print(f"Error: Project directory not found: {project_path}")
+        sys.exit(1)
+
+    codeai = CodeAI(project_path)
+
+    response = codeai.ask(question)
+
+    print(response)
+
+    sys.exit(0)
+
+
+# Existing file-based commands
+
 file_path = sys.argv[2]
 
 if not os.path.isfile(file_path):
     print(f"Error: File not found: {file_path}")
     sys.exit(1)
 
+
 with open(file_path, "r") as file:
     code = file.read()
+
+
 if command == "explain":
+
     prompt = f"""
 Explain the following source code in simple terms.
 
@@ -29,7 +66,9 @@ Source code:
 {code}
 """
 
+
 elif command == "review":
+
     prompt = f"""
 Review the following source code.
 
@@ -44,7 +83,9 @@ Source code:
 {code}
 """
 
+
 elif command == "debug":
+
     prompt = f"""
 Debug the following source code.
 
@@ -59,10 +100,13 @@ Source code:
 {code}
 """
 
+
 else:
+
     print(f"Unknown command: {command}")
-    print("Available commands: explain, review, debug")
+    print("Available commands: explain, review, debug, ask")
     sys.exit(1)
+
 
 response = ollama.chat(
     model="qwen3-coder:30b",
