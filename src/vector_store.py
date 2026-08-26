@@ -21,14 +21,21 @@ class VectorStore:
 
         results = []
 
+        query_norm = np.linalg.norm(query)
+
         for entry in self.entries:
             vector = np.array(
                 entry["embedding"],
                 dtype=np.float32
             )
 
+            vector_norm = np.linalg.norm(vector)
+
+            if query_norm == 0 or vector_norm == 0:
+                continue
+
             score = np.dot(query, vector) / (
-                np.linalg.norm(query) * np.linalg.norm(vector)
+                query_norm * vector_norm
             )
 
             results.append({
@@ -41,7 +48,43 @@ class VectorStore:
             reverse=True
         )
 
-        return results[:top_k]
+        selected = []
+        selected_ranges = {}
+
+        for result in results:
+            chunk = result["chunk"]
+            file_path = chunk["file"]
+
+            start_line = chunk["start_line"]
+            end_line = chunk["end_line"]
+
+            overlap_found = False
+
+            for existing_start, existing_end in selected_ranges.get(
+                file_path, []
+            ):
+                if (
+                    start_line <= existing_end
+                    and end_line >= existing_start
+                ):
+                    overlap_found = True
+                    break
+
+            if overlap_found:
+                continue
+
+            selected.append(result)
+
+            selected_ranges.setdefault(
+                file_path, []
+            ).append(
+                (start_line, end_line)
+            )
+
+            if len(selected) == top_k:
+                break
+
+        return selected
 
     def save(self, file_path):
         with open(file_path, "w", encoding="utf-8") as file:
