@@ -10,6 +10,7 @@ if len(sys.argv) < 3:
     print("  python src/main.py <command> <file>")
     print('  python src/main.py ask <project> "<question>"')
     print("  python src/main.py chat <project>")
+    print('  python src/main.py modify <file> "<instruction>"')
     sys.exit(1)
 
 
@@ -83,6 +84,35 @@ if command == "chat":
 
 
 # --------------------------------------------------
+# Repository-aware modification
+# --------------------------------------------------
+
+if command == "modify":
+
+    if len(sys.argv) < 4:
+        print('Usage: python src/main.py modify <file> "<instruction>"')
+        sys.exit(1)
+
+    file_path = sys.argv[2]
+    instruction = sys.argv[3]
+
+    if not os.path.isfile(file_path):
+        print(f"Error: File not found: {file_path}")
+        sys.exit(1)
+
+    project_path = "."
+
+    codeai = CodeAI(project_path)
+
+    codeai.modify(
+        file_path,
+        instruction
+    )
+
+    sys.exit(0)
+
+
+# --------------------------------------------------
 # Existing file-based commands
 # --------------------------------------------------
 
@@ -149,12 +179,11 @@ Source code:
 
 else:
 
-    print(
-        f"Unknown command: {command}"
-    )
+    print(f"Unknown command: {command}")
 
     print(
-        "Available commands: explain, review, debug, ask, chat"
+        "Available commands: "
+        "explain, review, debug, ask, chat, modify"
     )
 
     sys.exit(1)

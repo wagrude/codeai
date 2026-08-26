@@ -1,6 +1,9 @@
+import os
+
 from src.repository_retriever import RepositoryRetriever
 from src.context_builder import build_context
 from src.llm import generate
+from src.modifier import propose_change, apply_proposed_change
 
 
 class CodeAI:
@@ -40,3 +43,25 @@ User question:
 """
 
         return generate(prompt)
+
+    def modify(self, file_path, instruction):
+
+        if not os.path.isfile(file_path):
+            print(f"Error: File not found: {file_path}")
+            return
+
+        old_content, new_content, diff = propose_change(
+            file_path,
+            instruction
+        )
+
+        if not diff:
+            print("No changes detected.")
+            return
+
+        apply_proposed_change(
+            file_path,
+            old_content,
+            new_content,
+            diff
+        )
