@@ -9,13 +9,17 @@ if len(sys.argv) < 3:
     print("Usage:")
     print("  python src/main.py <command> <file>")
     print('  python src/main.py ask <project> "<question>"')
+    print("  python src/main.py chat <project>")
     sys.exit(1)
 
 
 command = sys.argv[1]
 
 
-# Repository-aware CodeAI
+# --------------------------------------------------
+# Repository-aware single question
+# --------------------------------------------------
+
 if command == "ask":
 
     if len(sys.argv) < 4:
@@ -38,7 +42,49 @@ if command == "ask":
     sys.exit(0)
 
 
+# --------------------------------------------------
+# Interactive repository chat
+# --------------------------------------------------
+
+if command == "chat":
+
+    project_path = sys.argv[2]
+
+    if not os.path.isdir(project_path):
+        print(f"Error: Project directory not found: {project_path}")
+        sys.exit(1)
+
+    codeai = CodeAI(project_path)
+
+    print("CodeAI interactive mode")
+    print("Type 'exit' or 'quit' to leave.\n")
+
+    while True:
+
+        try:
+            question = input("CodeAI> ").strip()
+
+        except (EOFError, KeyboardInterrupt):
+            print("\nExiting...")
+            break
+
+        if question.lower() in {"exit", "quit"}:
+            print("Goodbye.")
+            break
+
+        if not question:
+            continue
+
+        answer = codeai.ask(question)
+
+        print("\n" + answer + "\n")
+
+    sys.exit(0)
+
+
+# --------------------------------------------------
 # Existing file-based commands
+# --------------------------------------------------
 
 file_path = sys.argv[2]
 
@@ -103,8 +149,14 @@ Source code:
 
 else:
 
-    print(f"Unknown command: {command}")
-    print("Available commands: explain, review, debug, ask")
+    print(
+        f"Unknown command: {command}"
+    )
+
+    print(
+        "Available commands: explain, review, debug, ask, chat"
+    )
+
     sys.exit(1)
 
 

@@ -7,9 +7,9 @@ class CodeAI:
 
     def __init__(self, project_path):
         self.retriever = RepositoryRetriever(project_path)
+        self.retriever.build_index()
 
     def ask(self, question, top_k=5):
-        self.retriever.build_index()
 
         results = self.retriever.search(
             question,
