@@ -1,8 +1,8 @@
-from src.editor import create_diff
+from src.editor import create_diff, apply_change
+import ollama
 
 
 def generate_modified_content(old_content, instruction):
-    import ollama
 
     prompt = f"""
 You are a code modification assistant.
@@ -43,7 +43,7 @@ with open(file_path, "r", encoding="utf-8") as file:
     old_content = file.read()
 
 
-instruction = "Change the add function so it returns a + b + 10."
+instruction = "Change the add function so it returns a + b + 20."
 
 
 new_content = generate_modified_content(
@@ -51,10 +51,6 @@ new_content = generate_modified_content(
     instruction
 )
 
-print("Generated modification:")
-print(new_content)
-
-print("\n--- DIFF ---\n")
 
 diff = create_diff(
     file_path,
@@ -62,4 +58,27 @@ diff = create_diff(
     new_content
 )
 
+
+print("\n--- PROPOSED CHANGE ---\n")
 print(diff)
+
+if not diff:
+    print("No changes detected.")
+    exit(0)
+
+
+answer = input("\nApply this change? [y/N]: ").strip().lower()
+
+
+if answer == "y":
+
+    apply_change(
+        file_path,
+        new_content
+    )
+
+    print("\nChange applied.")
+
+else:
+
+    print("\nChange discarded.")
