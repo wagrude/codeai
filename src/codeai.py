@@ -4,6 +4,7 @@ from src.repository_retriever import RepositoryRetriever
 from src.context_builder import build_context
 from src.llm import generate
 from src.modifier import propose_change, apply_proposed_change
+from src.file_creator import propose_file, apply_file
 
 
 class CodeAI:
@@ -65,3 +66,32 @@ User question:
             new_content,
             diff
         )
+
+    def create(self, file_path, instruction):
+
+        if os.path.exists(file_path):
+            print(f"Error: File already exists: {file_path}")
+            return
+
+        content = propose_file(
+            file_path,
+            instruction
+        )
+
+        print("\n--- PROPOSED FILE ---\n")
+        print(content)
+
+        answer = input(
+            "\nCreate this file? [y/N]: "
+        ).strip().lower()
+
+        if answer != "y":
+            print("\nFile creation discarded.")
+            return
+
+        apply_file(
+            file_path,
+            content
+        )
+
+        print(f"\nFile created: {file_path}")
