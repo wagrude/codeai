@@ -17,11 +17,17 @@ class VectorStore:
         if not self.entries:
             return []
 
-        query = np.array(query_embedding, dtype=np.float32)
-
-        results = []
+        query = np.array(
+            query_embedding,
+            dtype=np.float32
+        )
 
         query_norm = np.linalg.norm(query)
+
+        if query_norm == 0:
+            return []
+
+        results = []
 
         for entry in self.entries:
             vector = np.array(
@@ -31,7 +37,7 @@ class VectorStore:
 
             vector_norm = np.linalg.norm(vector)
 
-            if query_norm == 0 or vector_norm == 0:
+            if vector_norm == 0:
                 continue
 
             score = np.dot(query, vector) / (

@@ -6,7 +6,7 @@ from src.vector_store import VectorStore
 
 class RepositoryRetriever:
 
-    def __init__(self, project_path, chunk_size=80, overlap=10):
+    def __init__(self, project_path, chunk_size=40, overlap=10):
         self.project_path = project_path
         self.chunk_size = chunk_size
         self.overlap = overlap
@@ -31,5 +31,5 @@ class RepositoryRetriever:
 
         return self.store.search(
             query_embedding,
-            top_k=top_k
-        )
+            top_k=top_k * 3
+        )[:top_k]
