@@ -18,9 +18,7 @@ if len(sys.argv) < 3:
 command = sys.argv[1]
 
 
-# --------------------------------------------------
 # Repository-aware single question
-# --------------------------------------------------
 
 if command == "ask":
 
@@ -44,9 +42,7 @@ if command == "ask":
     sys.exit(0)
 
 
-# --------------------------------------------------
 # Interactive repository chat
-# --------------------------------------------------
 
 if command == "chat":
 
@@ -84,9 +80,7 @@ if command == "chat":
     sys.exit(0)
 
 
-# --------------------------------------------------
 # Repository-aware modification
-# --------------------------------------------------
 
 if command == "modify":
 
@@ -111,14 +105,13 @@ if command == "modify":
     sys.exit(0)
 
 
-# --------------------------------------------------
 # Repository-aware file creation
-# --------------------------------------------------
 
 if command == "create":
 
     if len(sys.argv) < 4:
-        print('Usage: python src/main.py create <file> "<instruction>"')
+        print('    file_path = sys.argv[2]
+Usage: python src/main.py create <file> "<instruction>"')
         sys.exit(1)
 
     file_path = sys.argv[2]
@@ -137,10 +130,7 @@ if command == "create":
 
     sys.exit(0)
 
-
-# --------------------------------------------------
 # Existing file-based commands
-# --------------------------------------------------
 
 file_path = sys.argv[2]
 
@@ -184,7 +174,6 @@ Source code:
 
 {code}
 """
-
 
 elif command == "debug":
 
