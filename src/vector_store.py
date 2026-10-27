@@ -1,3 +1,4 @@
+
 import json
 import numpy as np
 
@@ -14,10 +15,10 @@ class VectorStore:
         })
 
     def search(self, query_embedding, top_k=5):
-        if not self.entries:
+        if not self.entries or top_k <= 0:
             return []
 
-        query = np.array(
+        query = np.asarray(
             query_embedding,
             dtype=np.float32
         )
@@ -30,10 +31,16 @@ class VectorStore:
         results = []
 
         for entry in self.entries:
-            vector = np.array(
+            vector = np.asarray(
                 entry["embedding"],
                 dtype=np.float32
             )
+
+            if vector.shape != query.shape:
+                raise ValueError(
+                    "Query and stored embeddings must have "
+                    "the same dimensions"
+                )
 
             vector_norm = np.linalg.norm(vector)
 
@@ -54,43 +61,7 @@ class VectorStore:
             reverse=True
         )
 
-        selected = []
-        selected_ranges = {}
-
-        for result in results:
-            chunk = result["chunk"]
-            file_path = chunk["file"]
-
-            start_line = chunk["start_line"]
-            end_line = chunk["end_line"]
-
-            overlap_found = False
-
-            for existing_start, existing_end in selected_ranges.get(
-                file_path, []
-            ):
-                if (
-                    start_line <= existing_end
-                    and end_line >= existing_start
-                ):
-                    overlap_found = True
-                    break
-
-            if overlap_found:
-                continue
-
-            selected.append(result)
-
-            selected_ranges.setdefault(
-                file_path, []
-            ).append(
-                (start_line, end_line)
-            )
-
-            if len(selected) == top_k:
-                break
-
-        return selected
+        return results[:top_k]
 
     def save(self, file_path):
         with open(file_path, "w", encoding="utf-8") as file:
